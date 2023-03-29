@@ -1,9 +1,11 @@
 # tasks file for ubuntu-2004-mariadb-server
 ---
 
-- include: install.yml
+- name: install
+  ansible.builtin.import_tasks: install.yml
 
-- include: configure.yml
+- name: configure
+  ansible.builtin.import_tasks: configure.yml
 
 - name: start and enable service
   ansible.builtin.service:
