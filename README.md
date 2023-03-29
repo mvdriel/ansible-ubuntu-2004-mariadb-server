@@ -1,5 +1,7 @@
 ## ubuntu-2004-mariadb-server
 
+[![CI](https://github.com/nlware/ansible-ubuntu-2004-mariadb-server/workflows/CI/badge.svg)](https://github.com/nlware/ansible-ubuntu-2004-mariadb-server/actions?query=workflow%3ACI)
+
 Ansible role to set up a MariaDB server on Ubuntu 20.04.
 
 #### Variables
