@@ -4,8 +4,8 @@
   ansible.builtin.command: >
     mysql \
       --database=mysql \
-      -e "UPDATE `user` \
-      SET `password` = PASSWORD('{{ ubuntu_2004_mariadb_server_root_password }}') \
+      -e "UPDATE `user` SET \
+      `password` = PASSWORD('{{ ubuntu_2004_mariadb_server_root_password }}') \
       WHERE `user` = 'root'; SELECT ROW_COUNT();" \
       --skip-column-names
   register: rows_affected
