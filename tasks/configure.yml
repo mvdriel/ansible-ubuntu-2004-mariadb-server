@@ -19,9 +19,7 @@
   ansible.builtin.file:
     path: /etc/mysql/ssl
     state: directory
-    owner: root
-    group: root
-    mode: 0700
+    mode: '700'
   when: "ubuntu_2004_mariadb_server_certificates_present | length > 0"
 
 - name: configure | delete certificate files
@@ -35,9 +33,7 @@
   ansible.builtin.copy:
     src: "{{ item.value }}"
     dest: "/etc/mysql/ssl/{{ item.key }}.pem"
-    owner: root
-    group: root
-    mode: 0600
+    mode: '600'
   with_dict: "{{ ubuntu_2004_mariadb_server_certificates_present }}"
   notify: restart mariadb-server
 
@@ -52,8 +48,6 @@
   ansible.builtin.template:
     src: "{{ item.value }}"
     dest: "/etc/mysql/mariadb.conf.d/{{ item.key }}.cnf"
-    owner: root
-    group: root
-    mode: 0644
+    mode: '644'
   with_dict: "{{ ubuntu_2004_mariadb_server_configuration_files_present }}"
   notify: restart mariadb-server
