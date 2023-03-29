@@ -4,7 +4,9 @@
   ansible.builtin.command: >
     mysql \
       --database=mysql \
-      -e "UPDATE `user` SET `password` = PASSWORD('{{ ubuntu_2004_mariadb_server_root_password }}') WHERE `user` = 'root'; SELECT ROW_COUNT();" \
+      -e "UPDATE `user` SET \
+      `password` = PASSWORD('{{ ubuntu_2004_mariadb_server_root_password }}') \
+      WHERE `user` = 'root'; SELECT ROW_COUNT();" \
       --skip-column-names
   register: rows_affected
   changed_when: "rows_affected.stdout != '0'"
@@ -17,7 +19,7 @@
   ansible.builtin.file:
     path: /etc/mysql/ssl
     state: directory
-    mode: 0700
+    mode: '700'
   when: "ubuntu_2004_mariadb_server_certificates_present | length > 0"
 
 - name: configure | delete certificate files
@@ -31,7 +33,7 @@
   ansible.builtin.copy:
     src: "{{ item.value }}"
     dest: "/etc/mysql/ssl/{{ item.key }}.pem"
-    mode: 0600
+    mode: '600'
   with_dict: "{{ ubuntu_2004_mariadb_server_certificates_present }}"
   notify: restart mariadb-server
 
@@ -46,5 +48,6 @@
   ansible.builtin.template:
     src: "{{ item.value }}"
     dest: "/etc/mysql/mariadb.conf.d/{{ item.key }}.cnf"
+    mode: '644'
   with_dict: "{{ ubuntu_2004_mariadb_server_configuration_files_present }}"
   notify: restart mariadb-server

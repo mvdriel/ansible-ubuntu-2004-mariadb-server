@@ -1,6 +1,6 @@
 # handlers file for ubuntu-2004-mariadb-server
 ---
 - name: restart mariadb-server
-  service:
+  ansible.builtin.service:
     name: mysql
     state: restarted
