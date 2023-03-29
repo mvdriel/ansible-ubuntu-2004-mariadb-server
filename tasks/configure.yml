@@ -1,7 +1,7 @@
 # tasks file for ubuntu-2004-mariadb-server
 ---
 - name: configure | set root password
-  command: >
+  ansible.builtin.command: >
     mysql \
       --database=mysql \
       -e "UPDATE `user` SET `password` = PASSWORD('{{ ubuntu_2004_mariadb_server_root_password }}') WHERE `user` = 'root'; SELECT ROW_COUNT();" \
@@ -10,25 +10,25 @@
   changed_when: "rows_affected.stdout != '0'"
 
 - name: configure | set root password | flush privileges
-  command: mysql --database=mysql -e "FLUSH PRIVILEGES;"
+  ansible.builtin.command: mysql --database=mysql -e "FLUSH PRIVILEGES;"
   when: "rows_affected.stdout != '0'"
 
 - name: configure | create certificate directory
-  file:
+  ansible.builtin.file:
     path: /etc/mysql/ssl
     state: directory
     mode: 0700
   when: "ubuntu_2004_mariadb_server_certificates_present | length > 0"
 
 - name: configure | delete certificate files
-  file:
+  ansible.builtin.file:
     path: "/etc/mysql/ssl/{{ item }}.pem"
     state: absent
   with_items: "{{ ubuntu_2004_mariadb_server_certificates_absent }}"
   notify: restart mariadb-server
 
 - name: configure | copy certificate files
-  copy:
+  ansible.builtin.copy:
     src: "{{ item.value }}"
     dest: "/etc/mysql/ssl/{{ item.key }}.pem"
     mode: 0600
@@ -36,14 +36,14 @@
   notify: restart mariadb-server
 
 - name: configure | delete (additional) configuration files
-  file:
+  ansible.builtin.file:
     path: "/etc/mysql/mariadb.conf.d/{{ item }}.cnf"
     state: absent
   with_items: "{{ ubuntu_2004_mariadb_server_configuration_files_absent }}"
   notify: restart mariadb-server
 
 - name: configure | copy (additional) configuration files
-  template:
+  ansible.builtin.template:
     src: "{{ item.value }}"
     dest: "/etc/mysql/mariadb.conf.d/{{ item.key }}.cnf"
   with_dict: "{{ ubuntu_2004_mariadb_server_configuration_files_present }}"

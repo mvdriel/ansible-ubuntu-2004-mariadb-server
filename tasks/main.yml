@@ -6,7 +6,7 @@
 - include: configure.yml
 
 - name: start and enable service
-  service:
+  ansible.builtin.service:
     name: mysql
     state: started
     enabled: true
